@@ -3,7 +3,15 @@
  */
 package sookie.trc.common;
 
+/**
+ *
+ * @author jiayu.li
+ */
 public class Library {
+    /**
+     * test
+     * @return test boolean
+     */
     public boolean someLibraryMethod() {
         return true;
     }
