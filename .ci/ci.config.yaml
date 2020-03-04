@@ -1,6 +1,6 @@
 format_version: 9 #声明本配置 基于哪个版本的配置解析
 environments:
-  testing:
+  testing: # 以环境群组的形式添加环境变量
     environment_variables: # 声明环境变量
       DEPLOYMENT: testing
     pipelines:
@@ -9,7 +9,7 @@ pipelines:
   test-build-maven-pipelines: # pipeline 名称
     group: 3u8633 # pipeline 所在分组  航司代码
     display_order: 10
-    lock_behavior: none
+    lock_behavior: unlockWhenFinished # 同一时期仅执行一个构建
     parameters: # list of parameters that can be configured for a pipeline
       param1: value1
     materials:
