@@ -167,7 +167,7 @@
                     <!--禁用retireJs检查-->
                     <retireJsAnalyzerEnabled>false</retireJsAnalyzerEnabled>
                     <databaseDriverName>org.postgresql.Driver</databaseDriverName>
-                    <connectionString>jdbc:postgresql://192.168.22.135:5432/postgres?characterEncoding=utf8</connectionString>
+                    <connectionString>${dependency-check-db}</connectionString>
                     <databaseUser>postgres</databaseUser>
                     <databasePassword>root</databasePassword>
                     <autoUpdate>false</autoUpdate>
@@ -192,7 +192,7 @@
             </activation>
             <properties>
                 <!-- Optional URL to server. Default value is http://localhost:9000 -->
-                <sonar.host.url>http://192.168.22.135:9000</sonar.host.url>
+                <sonar.host.url>${sonar-host-url}</sonar.host.url>
                 <!-- 配置字符编码 -->
                 <sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
                 <!-- 该项目的独特关键。允许的字符是：字母，数字 - ， _ ， . 和 : ，与至少一个非数字字符。 -->
