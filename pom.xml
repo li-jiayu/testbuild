@@ -34,19 +34,26 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0-M4</version>
-            </plugin>
-
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <includes>
+                        <include>**/*Test.java</include>
+                    </includes>
+                </configuration>
             </plugin>
 
             <!--sonar扫描-->
             <plugin>
                 <groupId>org.sonarsource.scanner.maven</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
-                <version>3.6.0.1398</version>
+                <version>3.3.0.603</version>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.sonar-plugins</groupId>
+                <artifactId>maven-report</artifactId>
+                <version>0.1</version>
+                <!-- url property needed for non default sonar address -->
+            </plugin>
+
             <!--代码风格检查-->
             <plugin>
                 <artifactId>maven-checkstyle-plugin</artifactId>
@@ -69,6 +76,13 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <!--asciidoctor-->
+            <plugin>
+                <groupId>org.asciidoctor</groupId>
+                <artifactId>asciidoctor-maven-plugin</artifactId>
+                <version>1.5.6</version>
+
             </plugin>
 
             <!--覆盖率检查-->
@@ -104,9 +118,11 @@
                 <artifactId>maven-pmd-plugin</artifactId>
                 <version>3.11.0</version>
                 <configuration>
-                    <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
-                    <targetJdk>${maven.compiler.target}</targetJdk>
+                    <sourceEncoding>UTF-8</sourceEncoding>
+                    <linkXRef>true</linkXRef>
                     <printFailingErrors>true</printFailingErrors>
+                    <aggregate>true</aggregate>
+                    <format>HTML</format>
                     <rulesets>
                         <ruleset>rulesets/java/ali-comment.xml</ruleset>
                         <ruleset>rulesets/java/ali-concurrent.xml</ruleset>
@@ -119,9 +135,6 @@
                         <ruleset>rulesets/java/ali-other.xml</ruleset>
                         <ruleset>rulesets/java/ali-set.xml</ruleset>
                     </rulesets>
-                    <excludes>
-                        <exclude>**/FixClassTypeResolver.java</exclude>
-                    </excludes>
                 </configuration>
                 <executions>
                     <execution>
@@ -147,6 +160,8 @@
                 <configuration>
                     <show>private</show>
                     <nohelp>true</nohelp>
+                    <failOnError>true</failOnError>
+                    <failOnWarnings>true</failOnWarnings>
                 </configuration>
             </plugin>
             <!--代码依赖缺陷检查-->
@@ -182,6 +197,54 @@
                 </executions>
             </plugin>
 
+            <!--IT-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>3.0.0-M4</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>com.github.vongosling</groupId>
+                <artifactId>dependency-mediator-maven-plugin</artifactId>
+                <version>1.0.1</version>
+            </plugin>
+
+            <!-- 依赖检查 -->
+            <plugin>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>1.4.1</version>
+                <executions>
+                    <execution>
+                        <id>enforce-ban-circular-dependencies</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <rules>
+                        <banCircularDependencies/>
+                    </rules>
+                    <fail>true</fail>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>extra-enforcer-rules</artifactId>
+                        <version>1.0-beta-4</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
         </plugins>
     </build>
     <profiles>
@@ -196,17 +259,21 @@
                 <!-- 配置字符编码 -->
                 <sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
                 <!-- 该项目的独特关键。允许的字符是：字母，数字 - ， _ ， . 和 : ，与至少一个非数字字符。 -->
-                <sonar.projectKey>:</sonar.projectKey>
+                <sonar.projectKey>test</sonar.projectKey>
                 <!-- 包含源文件的目录的逗号分隔路径。 -->
                 <sonar.sources></sonar.sources>
                 <!-- 将在Web界面上显示的项目的名称。 -->
+                <sonar.login>admin</sonar.login>
+                <sonar.password>admin</sonar.password>
                 <sonar.projectName>testBuild</sonar.projectName>
-                <!-- 项目版本 -->
+                <!-- 项目版本 preview, publish, issues-->
                 <sonar.projectVersion>V0.0.1</sonar.projectVersion>
+                <sonar.analysis.mode>preview</sonar.analysis.mode>
                 <sonar.issuesReport.html.enable>true</sonar.issuesReport.html.enable>
                 <sonar.issuesReport.console.enable>true</sonar.issuesReport.console.enable>
 
-                <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+
+
             </properties>
         </profile>
     </profiles>
